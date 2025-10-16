@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drop by Drop Outreach</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -14,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #5e9fe4 100%);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
@@ -56,7 +57,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 40px 20px;
             position: relative;
@@ -360,12 +361,6 @@
             border-radius: 15px;
             overflow: hidden;
             margin-top: 20px;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1e3c72;
-            font-weight: 600;
         }
 
         /* Footer */
@@ -405,15 +400,271 @@
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .event-details { flex-direction: column; gap: 15px; }
-            .timeline-item:hover { transform: scale(1.02); }
-            .current-time-indicator { top: 10px; right: 10px; padding: 10px 15px; }
-            .countdown-item { min-width: 60px; }
-            .countdown-value { font-size: 1.5em; }
-            .speakers-grid { grid-template-columns: 1fr; }
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
         }
+
+        .logo-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            display: block;
+        }
+
+        .brandscapers-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .brandscapers-logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .brandscapers-text {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* Day Tabs */
+        .day-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .day-tab {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #1e3c72;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-tab.active {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .day-tab:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Water Tips */
+        .water-tip {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+        }
+
+        .water-tip.show {
+            transform: translateX(0);
+        }
+
+        .water-tip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .water-tip-title {
+            font-weight: 700;
+            color: #1e3c72;
+            font-size: 1.2em;
+        }
+
+        .close-tip {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: #2a5298;
+            cursor: pointer;
+        }
+
+        /* Event Highlights */
+        .highlights-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .highlight-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .highlight-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #1e3c72;
+        }
+
+        .highlight-title {
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .highlight-desc {
+            color: #2a5298;
+            font-size: 0.9em;
+        }
+
+        /* Partners Section */
+       /* Partners Section with Auto-Sliding */
+    .partners-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px 30px;
+        border-radius: 20px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .partners-container {
+        position: relative;
+        overflow: hidden;
+        height: 160px;
+        display: flex;
+        align-items: center;
+    }
+
+    .partners-track {
+        display: flex;
+        gap: 60px;
+        padding: 0 20px;
+        animation: slidePartners 20s linear infinite;
+    }
+
+    .partner-logo {
+        height: 120px;
+        width: auto;
+        object-fit: contain;
+        transition: all 0.3s ease;
+        filter: grayscale(30%);
+        opacity: 0.9;
+        flex-shrink: 0;
+    }
+
+    .partner-logo:hover {
+        transform: scale(1.1);
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+
+    /* Pause animation on hover */
+    .partners-container:hover .partners-track {
+        animation-play-state: paused;
+    }
+
+    @keyframes slidePartners {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 30px)); /* Half the width + half the gap */
+        }
+    }
+
+    /* Gradient overlays for smooth edges */
+    .partners-container::before,
+    .partners-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 100px;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .partners-container::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(255,255,255,0.95) 0%, transparent 100%);
+    }
+
+    .partners-container::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(255,255,255,0.95) 0%, transparent 100%);
+    }
+
+    @media (max-width: 768px) {
+        .partner-logo {
+            height: 90px;
+        }
+        
+        .partners-track {
+            gap: 40px;
+        }
+        
+        .partners-container {
+            height: 130px;
+        }
+        
+        .partners-container::before,
+        .partners-container::after {
+            width: 60px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -438,23 +689,41 @@
         <span id="notificationText">Event starting soon!</span>
     </div>
 
+    <div class="water-tip" id="waterTip">
+        <div class="water-tip-header">
+            <div class="water-tip-title">💧 Water Saving Tip</div>
+            <button class="close-tip" id="closeTip">&times;</button>
+        </div>
+        <div class="water-tip-content" id="waterTipContent">Fix leaking taps promptly - a dripping tap can waste up to 30 litres of water per day!</div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>💧 Drop by Drop Outreach 💧</h1>
-            <p style="color: #2a5298; font-size: 1.2em; margin-bottom: 10px;">Water Conservation & Community Engagement Event</p>
+            <p style="color: #2a5298; font-size: 1.2em; margin-bottom: 10px;">Water Conservation & Community Engagement Summit</p>
+            
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-container">
+                    <img src="assets/randwaterLogo.png" alt="Rand Water Logo" class="logo-img">
+                </div>
+                <div class="logo-container">
+                    <img src="assets/waterwiseLogo.jpeg" alt="Water Wise Logo" class="logo-img">
+                </div>
+            </div>
             
             <div class="event-details">
                 <div class="detail-item">
                     <span class="detail-icon">📅</span>
-                    <span>30 October 2025</span>
+                    <span>30-31 October 2025</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-icon">⏰</span>
-                    <span>9:00 AM - 2:00 PM</span>
+                    <span>9:00 AM - 2:00 PM Daily</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-icon">📍</span>
-                    <span>Uncle Toms Community Hall - Soweto</span>
+                    <span>Uncle Toms Community Hall - Orlando West, Soweto</span>
                 </div>
             </div>
 
@@ -482,6 +751,11 @@
             </div>
         </div>
 
+        <div class="day-tabs">
+            <div class="day-tab active" data-day="1">Day 1 - 30 October</div>
+            <div class="day-tab" data-day="2">Day 2 - 31 October</div>
+        </div>
+
         <div class="controls">
             <button class="control-btn" id="scrollToCurrent">
                 <i class="fas fa-crosshairs"></i> Jump to Current
@@ -492,79 +766,176 @@
         </div>
 
         <div class="timeline" id="timeline">
-            <div class="timeline-item" data-time="09:00">
-                <div class="time">09:00 – 09:30 AM</div>
-                <div class="activity">Arrivals 🎉</div>
-                <div class="description">Arrival, Registration & Networking</div>
+            <!-- Day 1 Content -->
+            <div class="timeline-day day-1">
+                <div class="timeline-item" data-time="09:00">
+                    <div class="time">09:00 – 09:30 AM</div>
+                    <div class="activity">Arrivals & Registration 🎉</div>
+                    <div class="description">Arrival, Registration & Networking</div>
+                </div>
+
+                <div class="timeline-item" data-time="09:30">
+                    <div class="time">09:30 – 09:40 AM</div>
+                    <div class="activity">Opening & Welcome 🎤</div>
+                    <div class="speaker">Local Ward Councillor Lefa Modise</div>
+                </div>
+
+                <div class="timeline-item" data-time="09:40">
+                    <div class="time">09:40 – 09:50 AM</div>
+                    <div class="activity">Purpose of the Day 🎯</div>
+                    <div class="speaker">Mulalo Ramulondi</div>
+                </div>
+
+                <div class="timeline-item" data-time="09:50">
+                    <div class="time">09:50 – 10:05 AM</div>
+                    <div class="activity">Message of Support 💬</div>
+                    <div class="speaker">Rand Water Executive</div>
+                </div>
+
+                <div class="timeline-item" data-time="10:05">
+                    <div class="time">10:05 – 10:20 AM</div>
+                    <div class="activity">Department of Water and Sanitation 🏛️</div>
+                    <div class="speaker">Representative</div>
+                </div>
+
+                <div class="timeline-item tea-break" data-time="10:20">
+                    <div class="time">10:20 – 10:40 AM</div>
+                    <div class="activity">☕ Tea Break ☕</div>
+                    <div class="description">Refreshments & Networking</div>
+                </div>
+
+                <div class="timeline-item" data-time="10:40">
+                    <div class="time">10:40 – 10:55 AM</div>
+                    <div class="speaker">Dr Jeff Masemola</div>
+                    <div class="description">Innovations in Water Conservation</div>
+                </div>
+
+                <div class="timeline-item" data-time="10:55">
+                    <div class="time">10:55 AM – 12:10 PM</div>
+                    <div class="activity">Johannesburg Water 💧</div>
+                    <div class="description">Community Water Management Initiatives</div>
+                </div>
+
+                <div class="timeline-item" data-time="12:10">
+                    <div class="time">12:10 – 12:25 PM</div>
+                    <div class="activity">EWSETA 📚</div>
+                    <div class="speaker">Nkanyezi Blose</div>
+                </div>
+
+                <div class="timeline-item" data-time="12:25">
+                    <div class="time">12:25 – 12:40 PM</div>
+                    <div class="activity">Takealot 📦</div>
+                    <div class="speaker">Tshepo Marumule</div>
+                </div>
+
+                <div class="timeline-item" data-time="12:40">
+                    <div class="time">12:40 – 13:40 PM</div>
+                    <div class="activity">Rand Water 🌊</div>
+                    <div class="speaker">Mulalo Ramulondi</div>
+                    <div class="description">Water Conservation Strategies for Households</div>
+                </div>
+
+                <div class="timeline-item" data-time="13:40">
+                    <div class="time">13:40 – 13:55 PM</div>
+                    <div class="activity">Rand Water 🌊</div>
+                    <div class="speaker">Mulalo Ramulondi</div>
+                    <div class="description">Q&A Session</div>
+                </div>
+
+                <div class="timeline-item" data-time="13:55">
+                    <div class="time">13:55 – 14:00 PM</div>
+                    <div class="activity">Day 1 Closing 🙏</div>
+                    <div class="description">Summary and Preview of Day 2</div>
+                </div>
             </div>
 
-            <div class="timeline-item" data-time="09:30">
-                <div class="time">09:30 – 09:40 AM</div>
-                <div class="activity">Opening & Welcome 🎤</div>
-                <div class="speaker">Local Ward Councillor Lefa Modise</div>
-            </div>
+            <!-- Day 2 Content -->
+            <div class="timeline-day day-2" style="display: none;">
+                <div class="timeline-item" data-time="09:00">
+                    <div class="time">09:00 – 09:30 AM</div>
+                    <div class="activity">Day 2 Arrivals 🎉</div>
+                    <div class="description">Arrival, Registration & Networking</div>
+                </div>
 
-            <div class="timeline-item" data-time="09:40">
-                <div class="time">09:40 – 09:50 AM</div>
-                <div class="activity">Purpose of the Day 🎯</div>
-                <div class="speaker">Mulalo Ramulondi</div>
-            </div>
+                <div class="timeline-item" data-time="09:30">
+                    <div class="time">09:30 – 09:45 AM</div>
+                    <div class="activity">Day 2 Opening & Recap 🎤</div>
+                    <div class="speaker">Mulalo Ramulondi</div>
+                </div>
 
-            <div class="timeline-item" data-time="09:50">
-                <div class="time">09:50 – 10:05 AM</div>
-                <div class="activity">Message of Support 💬</div>
-                <div class="speaker">Rand Water Executive</div>
-            </div>
+                <div class="timeline-item" data-time="09:45">
+                    <div class="time">09:45 – 10:15 AM</div>
+                    <div class="activity">Rainwater Harvesting Workshop 💧</div>
+                    <div class="speaker">Water Wise Team</div>
+                </div>
 
-            <div class="timeline-item" data-time="10:05">
-                <div class="time">10:05 – 10:20 AM</div>
-                <div class="activity">Department of Water and Sanitation 🏛️</div>
-                <div class="speaker">Representative</div>
-            </div>
+                <div class="timeline-item" data-time="10:15">
+                    <div class="time">10:15 – 10:45 AM</div>
+                    <div class="activity">Greywater Systems Demonstration 🔄</div>
+                    <div class="speaker">Johannesburg Water Engineers</div>
+                </div>
 
-            <div class="timeline-item tea-break" data-time="10:20">
-                <div class="time">10:20 – 10:40 AM</div>
-                <div class="activity">☕ Tea Break ☕</div>
-                <div class="description">Refreshments & Networking</div>
-            </div>
+                <div class="timeline-item tea-break" data-time="10:45">
+                    <div class="time">10:45 – 11:05 AM</div>
+                    <div class="activity">☕ Tea Break ☕</div>
+                    <div class="description">Refreshments & Networking</div>
+                </div>
 
-            <div class="timeline-item" data-time="10:40">
-                <div class="time">10:40 – 10:55 AM</div>
-                <div class="speaker">Dr Jeff Masemola</div>
-            </div>
+                <div class="timeline-item" data-time="11:05">
+                    <div class="time">11:05 – 11:45 AM</div>
+                    <div class="activity">Community Water Action Plans 📋</div>
+                    <div class="speaker">Facilitated by EWSETA</div>
+                </div>
 
-            <div class="timeline-item" data-time="10:55">
-                <div class="time">10:55 AM – 12:10 PM</div>
-                <div class="activity">Johannesburg Water 💧</div>
-            </div>
+                <div class="timeline-item" data-time="11:45">
+                    <div class="time">11:45 AM – 12:30 PM</div>
+                    <div class="activity">Youth Water Innovation Challenge 🚀</div>
+                    <div class="speaker">Takealot & Rand Water</div>
+                </div>
 
-            <div class="timeline-item" data-time="12:10">
-                <div class="time">12:10 – 12:25 PM</div>
-                <div class="activity">EWSETA 📚</div>
-                <div class="speaker">Nkanyezi Blose</div>
-            </div>
+                <div class="timeline-item" data-time="12:30">
+                    <div class="time">12:30 – 13:15 PM</div>
+                    <div class="activity">Interactive Panel Discussion 💬</div>
+                    <div class="speaker">All Speakers</div>
+                </div>
 
-            <div class="timeline-item" data-time="12:25">
-                <div class="time">12:25 – 12:40 PM</div>
-                <div class="activity">Takealot 📦</div>
-                <div class="speaker">Tshepo Marumule</div>
-            </div>
+                <div class="timeline-item" data-time="13:15">
+                    <div class="time">13:15 – 13:45 PM</div>
+                    <div class="activity">Awards & Certificates 🏆</div>
+                    <div class="speaker">Rand Water Executive</div>
+                </div>
 
-            <div class="timeline-item" data-time="12:40">
-                <div class="time">12:40 – 13:40 PM</div>
-                <div class="activity">Rand Water 🌊</div>
-                <div class="speaker">Mulalo Ramulondi</div>
+                <div class="timeline-item" data-time="13:45">
+                    <div class="time">13:45 – 14:00 PM</div>
+                    <div class="activity">Summit Closing & Way Forward 🙏</div>
+                    <div class="speaker">Mulalo Ramulondi & Ward Councillor</div>
+                </div>
             </div>
+        </div>
 
-            <div class="timeline-item" data-time="13:40">
-                <div class="time">13:40 – 13:55 PM</div>
-                <div class="activity">Rand Water 🌊</div>
-                <div class="speaker">Mulalo Ramulondi</div>
-            </div>
-
-            <div class="timeline-item" data-time="13:55">
-                <div class="time">13:55 – 14:00 PM</div>
-                <div class="activity">Vote of Thanks and Announcement 🙏</div>
+        <div class="highlights-section">
+            <h2 style="color: #1e3c72; text-align: center; margin-bottom: 20px;">Event Highlights</h2>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="highlight-icon">💧</div>
+                    <div class="highlight-title">Water Conservation Demos</div>
+                    <div class="highlight-desc">Live demonstrations of water-saving technologies and practices for households</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🤝</div>
+                    <div class="highlight-title">Community Engagement</div>
+                    <div class="highlight-desc">Interactive sessions to develop community-led water conservation initiatives</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🎓</div>
+                    <div class="highlight-title">Skills Development</div>
+                    <div class="highlight-desc">Training on water management and conservation techniques</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-icon">🏆</div>
+                    <div class="highlight-title">Innovation Challenge</div>
+                    <div class="highlight-desc">Youth competition for innovative water conservation solutions</div>
+                </div>
             </div>
         </div>
 
@@ -599,22 +970,44 @@
             </div>
         </div>
 
+       <!-- Partners Section -->
+<div class="partners-section">
+    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 30px; font-size: 2em;">Our Partners</h2>
+    <div class="partners-container">
+        <div class="partners-track">
+            <img src="assets/randwaterLogo.png" alt="Rand Water" class="partner-logo">
+            <img src="assets/waterwiseLogo.jpeg" alt="Water Wise" class="partner-logo">
+            <img src="assets/ewsetaLogo.png" alt="EWSETA" class="partner-logo">
+            <img src="assets/takealotlogo.webp" alt="Takealot" class="partner-logo">
+            <!-- Duplicate logos for seamless loop -->
+            <img src="assets/randwaterLogo.png" alt="Rand Water" class="partner-logo">
+            <img src="assets/waterwiseLogo.jpeg" alt="Water Wise" class="partner-logo">
+            <img src="assets/ewsetaLogo.png" alt="EWSETA" class="partner-logo">
+            <img src="assets/takealotlogo.webp" alt="Takealot" class="partner-logo">
+        </div>
+    </div>
+</div>
         <div class="map-section">
             <h2 style="color: #1e3c72; text-align: center; margin-bottom: 20px;">Event Location</h2>
-            <p style="text-align: center; color: #2a5298; margin-bottom: 10px;">Uncle Toms Community Hall, Soweto, Johannesburg</p>
-            <div class="map-container">
-                <i class="fas fa-map-marker-alt" style="font-size: 2em; margin-right: 10px;"></i>
-                Interactive Map - Location of Uncle Toms Community Hall
-            </div>
+            <p style="text-align: center; color: #2a5298; margin-bottom: 10px;">Uncle Toms Community Hall, Orlando West, Soweto, Johannesburg</p>
+            <div class="map-container" id="map"></div>
+        </div>
+        
+        <!-- Brandscapers Africa Section -->
+        <div class="brandscapers-section">
+            <span class="brandscapers-text">Powered by</span>
+            <img src="assets/brandscaperLogo.jpeg" alt="Brandscapers Africa Logo" class="brandscapers-logo"><span><a href="https://www.brandscapersafrica.com/"  class="brandscapers-text">Brandscapers Africa</a></span>
         </div>
     </div>
 
     <div class="footer">
-        <p>Drop by Drop Outreach Event | 30 October 2025</p>
-        <p>For more information, contact: info@dropbydrop.org</p>
+        <p>Drop by Drop Outreach Summit | 30-31 October 2025</p>
+        <p>For more information, contact: <span><a href="https://waterwise.co.za/">www.waterwise.co.za </a></span> | Tel: +27 11 123 4567</p>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        
         // Create bubbles
         function createBubble() {
             const bubble = document.createElement('div');
@@ -709,7 +1102,7 @@
         function updateProgressBar() {
             const now = new Date();
             const eventStart = new Date('2025-10-30T09:00:00');
-            const eventEnd = new Date('2025-10-30T14:00:00');
+            const eventEnd = new Date('2025-10-31T14:00:00');
             
             if (now < eventStart) {
                 document.getElementById('progressBar').style.width = '0%';
@@ -801,11 +1194,84 @@
             }
         }
 
+        // Day tabs functionality
+        const dayTabs = document.querySelectorAll('.day-tab');
+        const timelineDays = document.querySelectorAll('.timeline-day');
+        
+        dayTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const day = this.getAttribute('data-day');
+                
+                // Update active tab
+                dayTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding day content
+                timelineDays.forEach(dayContent => {
+                    dayContent.style.display = 'none';
+                });
+                document.querySelector(`.day-${day}`).style.display = 'block';
+                
+                showNotification(`Now viewing Day ${day} schedule`);
+            });
+        });
+
+        // Water saving tips
+        const waterTips = [
+            "Fix leaking taps promptly - a dripping tap can waste up to 30 litres of water per day!",
+            "Take shorter showers - reducing your shower time by just 2 minutes can save over 30 litres of water.",
+            "Install water-efficient showerheads - they can reduce water usage by up to 40%.",
+            "Collect rainwater for gardening - it's free and reduces your municipal water consumption.",
+            "Only run full loads in your washing machine and dishwasher to maximize water efficiency.",
+            "Water your garden early in the morning or late in the evening to reduce evaporation.",
+            "Use a broom instead of a hose to clean driveways and sidewalks.",
+            "Install a dual-flush toilet - it can save thousands of litres per year.",
+            "Turn off the tap while brushing your teeth - this simple act can save 6 litres per minute.",
+            "Use a bucket instead of a running hose when washing your car."
+        ];
+
+        let currentTipIndex = 0;
+        const waterTip = document.getElementById('waterTip');
+        const waterTipContent = document.getElementById('waterTipContent');
+        const closeTip = document.getElementById('closeTip');
+
+        function showWaterTip() {
+            waterTipContent.textContent = waterTips[currentTipIndex];
+            waterTip.classList.add('show');
+            
+            currentTipIndex = (currentTipIndex + 1) % waterTips.length;
+        }
+
+        closeTip.addEventListener('click', function() {
+            waterTip.classList.remove('show');
+        });
+
+        // Initialize map
+        function initMap() {
+            // Coordinates for Uncle Toms Community Hall in Orlando West, Soweto
+            const map = L.map('map').setView([-26.2485, 27.9149], 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker([-26.2485, 27.9149]).addTo(map)
+                .bindPopup('Uncle Toms Community Hall<br>Orlando West, Soweto')
+                .openPopup();
+        }
+
         // Initialize
         updateCurrentTime();
         updateCountdown();
         setInterval(updateCurrentTime, 30000); // Update every 30 seconds
         setInterval(updateCountdown, 1000); // Update countdown every second
+        setInterval(showWaterTip, 30000); // Show water tip every 30 seconds
+
+        // Show first water tip after 5 seconds
+        setTimeout(showWaterTip, 5000);
+
+        // Initialize map when page loads
+        window.addEventListener('load', initMap);
 
         // Click to expand/highlight
         items.forEach(item => {
@@ -821,8 +1287,88 @@
 
         // Show initial notification
         setTimeout(() => {
-            showNotification('Welcome to the Drop by Drop Outreach event page!');
+            showNotification('Welcome to the Drop by Drop Outreach Summit page!');
         }, 1000);
+
+         document.addEventListener('DOMContentLoaded', function() {
+        const track = document.querySelector('.partners-track');
+        const logos = document.querySelectorAll('.partner-logo');
+        const prevBtn = document.querySelector('.partner-nav.prev');
+        const nextBtn = document.querySelector('.partner-nav.next');
+        
+        let currentIndex = 0;
+        const logoWidth = logos[0].offsetWidth + 60; // width + gap
+        
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * logoWidth}px)`;
+        }
+        
+        prevBtn.addEventListener('click', function() {
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateCarousel();
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            currentIndex = Math.min(currentIndex + 1, logos.length - 1);
+            updateCarousel();
+        });
+        
+        // Auto-advance every 5 seconds
+        setInterval(function() {
+            if (currentIndex < logos.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }, 5000);
+    });
     </script>
+    <script>
+    // Add this carousel code RIGHT BEFORE the closing </body> tag
+    // Partners Carousel Functionality
+    function initPartnersCarousel() {
+        const track = document.querySelector('.partners-track');
+        const logos = document.querySelectorAll('.partner-logo');
+        const prevBtn = document.querySelector('.partner-nav.prev');
+        const nextBtn = document.querySelector('.partner-nav.next');
+        
+        if (!track || !logos.length || !prevBtn || !nextBtn) {
+            console.log('Carousel elements not found');
+            return;
+        }
+        
+        let currentIndex = 0;
+        const logoWidth = logos[0].offsetWidth + 60; // width + gap
+        
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * logoWidth}px)`;
+            console.log('Moving to position:', currentIndex * logoWidth);
+        }
+        
+        prevBtn.addEventListener('click', function() {
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateCarousel();
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            currentIndex = Math.min(currentIndex + 1, logos.length - 1);
+            updateCarousel();
+        });
+        
+        // Auto-advance every 5 seconds
+        setInterval(function() {
+            if (currentIndex < logos.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop back to start
+            }
+            updateCarousel();
+        }, 5000);
+        
+        console.log('Partners carousel initialized');
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', initPartnersCarousel);
+</script>
 </body>
 </html>
