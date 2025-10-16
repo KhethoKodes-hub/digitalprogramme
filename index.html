@@ -303,50 +303,174 @@
             backdrop-filter: blur(10px);
         }
 
+        /* Updated Speaker Avatar Styles */
+    .speaker-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.2em;
+        font-weight: 700;
+        border: 4px solid #e8f4f8;
+        box-shadow: 0 6px 20px rgba(30, 60, 114, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .speaker-initials {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.2em;
+        font-weight: 700;
+        color: white;
+        z-index: 2;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Show initials by default, hide when image loads */
+    .speaker-avatar .speaker-initials {
+        opacity: 1;
+    }
+
+    .speaker-avatar .profile-image {
+        opacity: 0;
+    }
+
+    /* When image loads successfully, show image and hide initials */
+    .speaker-avatar:has(.profile-image:not([style*="display: none"])) .speaker-initials {
+        opacity: 0;
+    }
+
+    .speaker-avatar:has(.profile-image:not([style*="display: none"])) .profile-image {
+        opacity: 1;
+    }
+
+    /* Hover effects */
+    .speaker-card:hover .speaker-avatar {
+        transform: scale(1.08);
+        border-color: #2a5298;
+        box-shadow: 0 8px 25px rgba(42, 82, 152, 0.3);
+    }
+
+    .speaker-card:hover .speaker-initials {
+        opacity: 1;
+        background: rgba(30, 60, 114, 0.9);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        backdrop-filter: blur(2px);
+    }
+
+    .speaker-card:hover .profile-image {
+        opacity: 0.3;
+        transform: scale(1.1);
+    }
+
+    /* Rest of the speaker card styles */
+    .speaker-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px 25px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0;
+    }
+
+    .speaker-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .speaker-name {
+        font-weight: 700;
+        color: #1e3c72;
+        margin-bottom: 10px;
+        font-size: 1.4em;
+        margin-top: 10px;
+    }
+
+    .speaker-role {
+        color: #2a5298;
+        font-size: 1.05em;
+        line-height: 1.4;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    .speakers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
         .speakers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
         }
-
-        .speaker-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .speaker-card:hover {
-            transform: translateY(-5px);
-        }
-
+        
         .speaker-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .speaker-card {
+            padding: 30px 20px;
+        }
+        
+        .speaker-name {
+            font-size: 1.3em;
+        }
+        
+        .speaker-initials {
             font-size: 2em;
         }
+    }
 
-        .speaker-name {
-            font-weight: 700;
-            color: #1e3c72;
-            margin-bottom: 5px;
+    @media (max-width: 480px) {
+        .speakers-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
-        .speaker-role {
-            color: #2a5298;
-            font-size: 0.9em;
+        
+        .speaker-avatar {
+            width: 110px;
+            height: 110px;
         }
-
+        
+        .speaker-initials {
+            font-size: 1.8em;
+        }
+    }
         /* Map section */
         .map-section {
             background: rgba(255, 255, 255, 0.95);
@@ -940,37 +1064,53 @@
             </div>
         </div>
 
-        <div class="speakers-section">
-            <h2 style="color: #1e3c72; text-align: center; margin-bottom: 20px;">Featured Speakers</h2>
-            <div class="speakers-grid">
-                <div class="speaker-card">
-                    <div class="speaker-avatar">LM</div>
-                    <div class="speaker-name">Lefa Modise</div>
-                    <div class="speaker-role">Local Ward Councillor</div>
-                </div>
-                <div class="speaker-card">
-                    <div class="speaker-avatar">MR</div>
-                    <div class="speaker-name">Mulalo Ramulondi</div>
-                    <div class="speaker-role">Rand Water Representative</div>
-                </div>
-                <div class="speaker-card">
-                    <div class="speaker-avatar">JM</div>
-                    <div class="speaker-name">Dr Jeff Masemola</div>
-                    <div class="speaker-role">Water Conservation Expert</div>
-                </div>
-                <div class="speaker-card">
-                    <div class="speaker-avatar">NB</div>
-                    <div class="speaker-name">Nkanyezi Blose</div>
-                    <div class="speaker-role">EWSETA Representative</div>
-                </div>
-                <div class="speaker-card">
-                    <div class="speaker-avatar">TM</div>
-                    <div class="speaker-name">Tshepo Marumule</div>
-                    <div class="speaker-role">Takealot Representative</div>
-                </div>
+       <!-- Speakers Section with Profile Images -->
+<!-- Speakers Section with Properly Fitted Images -->
+<div class="speakers-section">
+    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 20px;">Featured Speakers</h2>
+    <div class="speakers-grid">
+        <div class="speaker-card">
+            <div class="speaker-avatar">
+                <img src="assets/LefaModise.jpeg" alt="Lefa Modise" class="profile-image" onerror="this.style.display='none'">
+                <div class="speaker-initials">LM</div>
             </div>
+            <div class="speaker-name">Lefa Modise</div>
+            <div class="speaker-role">Local Ward Councillor</div>
         </div>
-
+        <div class="speaker-card">
+            <div class="speaker-avatar">
+                <img src="assets/mmemulalo.png" alt="Mulalo Ramulondi" class="profile-image" onerror="this.style.display='none'">
+                <div class="speaker-initials">MR</div>
+            </div>
+            <div class="speaker-name">Mulalo Ramulondi</div>
+            <div class="speaker-role">Rand Water Representative</div>
+        </div>
+        <div class="speaker-card">
+            <div class="speaker-avatar">
+                <img src="assets/JeffMasemola.jpeg" alt="Dr Jeff Masemola" class="profile-image" onerror="this.style.display='none'">
+                <div class="speaker-initials">JM</div>
+            </div>
+            <div class="speaker-name">Dr Jeff Masemola</div>
+            <div class="speaker-role">Water Conservation Expert</div>
+        </div>
+        <div class="speaker-card">
+            <div class="speaker-avatar">
+                <img src="assets/nkanyeziBlose.jpeg" alt="Nkanyezi Blose" class="profile-image" onerror="this.style.display='none'">
+                <div class="speaker-initials">NB</div>
+            </div>
+            <div class="speaker-name">Nkanyezi Blose</div>
+            <div class="speaker-role">EWSETA Representative</div>
+        </div>
+        <div class="speaker-card">
+            <div class="speaker-avatar">
+                <img src="assets/Tshepo-Marumule-2025.jpg" alt="Tshepo Marumule" class="profile-image" onerror="this.style.display='none'">
+                <div class="speaker-initials">TM</div>
+            </div>
+            <div class="speaker-name">Tshepo Marumule</div>
+            <div class="speaker-role">Takealot Representative</div>
+        </div>
+    </div>
+</div
        <!-- Partners Section -->
 <div class="partners-section">
     <h2 style="color: #1e3c72; text-align: center; margin-bottom: 30px; font-size: 2em;">Our Partners</h2>
@@ -1321,6 +1461,35 @@
                 updateCarousel();
             }
         }, 5000);
+    });
+
+      // Add this script to handle image loading and fallbacks
+    document.addEventListener('DOMContentLoaded', function() {
+        const speakerAvatars = document.querySelectorAll('.speaker-avatar');
+        
+        speakerAvatars.forEach(avatar => {
+            const img = avatar.querySelector('.profile-image');
+            const initials = avatar.querySelector('.speaker-initials');
+            
+            // Check if image loads successfully
+            if (img) {
+                img.addEventListener('load', function() {
+                    avatar.classList.add('has-image');
+                });
+                
+                img.addEventListener('error', function() {
+                    // Image failed to load, show initials
+                    avatar.classList.remove('has-image');
+                    initials.style.opacity = '1';
+                });
+                
+                // Check if src is empty or invalid
+                if (!img.src || img.src.includes('undefined') || img.complete && img.naturalHeight === 0) {
+                    avatar.classList.remove('has-image');
+                    initials.style.opacity = '1';
+                }
+            }
+        });
     });
     </script>
     
