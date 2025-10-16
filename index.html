@@ -6,6 +6,7 @@
     <title>Drop by Drop Outreach</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" type="image/png" href="assets/waterwiseLogo.jpeg">
     <style>
         * {
             margin: 0;
@@ -699,7 +700,7 @@
 
     <div class="container">
         <div class="header">
-            <h1>💧 Drop by Drop Outreach 💧</h1>
+            <h1>💧 Drop-by-Drop Outreach Programme 💧</h1>
             <p style="color: #2a5298; font-size: 1.2em; margin-bottom: 10px;">Water Conservation & Community Engagement Summit</p>
             
             <!-- Logo Section -->
@@ -1322,53 +1323,7 @@
         }, 5000);
     });
     </script>
-    <script>
-    // Add this carousel code RIGHT BEFORE the closing </body> tag
-    // Partners Carousel Functionality
-    function initPartnersCarousel() {
-        const track = document.querySelector('.partners-track');
-        const logos = document.querySelectorAll('.partner-logo');
-        const prevBtn = document.querySelector('.partner-nav.prev');
-        const nextBtn = document.querySelector('.partner-nav.next');
-        
-        if (!track || !logos.length || !prevBtn || !nextBtn) {
-            console.log('Carousel elements not found');
-            return;
-        }
-        
-        let currentIndex = 0;
-        const logoWidth = logos[0].offsetWidth + 60; // width + gap
-        
-        function updateCarousel() {
-            track.style.transform = `translateX(-${currentIndex * logoWidth}px)`;
-            console.log('Moving to position:', currentIndex * logoWidth);
-        }
-        
-        prevBtn.addEventListener('click', function() {
-            currentIndex = Math.max(currentIndex - 1, 0);
-            updateCarousel();
-        });
-        
-        nextBtn.addEventListener('click', function() {
-            currentIndex = Math.min(currentIndex + 1, logos.length - 1);
-            updateCarousel();
-        });
-        
-        // Auto-advance every 5 seconds
-        setInterval(function() {
-            if (currentIndex < logos.length - 1) {
-                currentIndex++;
-            } else {
-                currentIndex = 0; // Loop back to start
-            }
-            updateCarousel();
-        }, 5000);
-        
-        console.log('Partners carousel initialized');
-    }
-
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', initPartnersCarousel);
-</script>
+    
+    
 </body>
 </html>
